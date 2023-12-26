@@ -24,21 +24,25 @@ public:
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
+    void clearImportedFile();
 
 private slots:
     void onbuttonBINClicked();
     void onbuttonHEXClicked();
     void onbuttonCHARClicked();
     void onbuttonSAVEClicked();
+    void onbuttonCLEARClicked();
     bool isValidTextForCurrentMode();
 
 private:
     QLabel *label; // Label zur Anzeige von Informationen
     QLabel *infoLabel; // Zusätzliches Label für ergänzende Informationen
+    QLabel *werbungLabel;
     QPushButton *buttonBIN; // Button für Binärmodus
     QPushButton *buttonHEX; // Button für Hexadezimalmodus
     QPushButton *buttonCHAR; // Button für Zeichenmodus
     QPushButton *buttonSAVE; // Button zum Speichern
+    QPushButton *buttonCLEAR; // Button zum zurücksetzen des UIs
     QTextEdit *textEdit; // Textfeld für Eingabe/Ausgabe
     QString originalFileExtension; // Ursprüngliche Dateierweiterung
     enum class Mode { Normal, Binary, Hexadecimal } currentMode = Mode::Normal; // Hier wird definiert in welchem Modus sich das Programm befindet zur Zeichenüberprüfung

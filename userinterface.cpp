@@ -26,11 +26,18 @@ DragDropWidget::DragDropWidget(QWidget *parent) : QWidget(parent) {
     buttonSAVE = new QPushButton("Speichern", this);
     connect(buttonSAVE, &QPushButton::clicked, this, &DragDropWidget::onbuttonSAVEClicked);
 
+    buttonCLEAR = new QPushButton("Zurücksetzen", this);
+    connect(buttonCLEAR, &QPushButton::clicked, this, &DragDropWidget::onbuttonCLEARClicked);
+
     // Buttons zu Beginn deaktivieren, da keine Datei geladen wurde
     buttonBIN->setEnabled(false);
+    buttonBIN->setFixedSize(300, 50);
     buttonHEX->setEnabled(false);
+    buttonHEX->setFixedSize(300, 50);
     buttonCHAR->setEnabled(false);
+    buttonCHAR->setFixedSize(300, 50);
     buttonSAVE->setEnabled(false);
+    buttonCLEAR->setEnabled(false);
 
     // Layout erstellen und Widgets hinzufügen
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -40,6 +47,7 @@ DragDropWidget::DragDropWidget(QWidget *parent) : QWidget(parent) {
     layout->addWidget(buttonHEX);
     layout->addWidget(buttonCHAR);
     layout->addWidget(buttonSAVE);
+    layout->addWidget(buttonCLEAR);
 }
 
 // Start des Drag and Drop Ereignisses
@@ -89,6 +97,7 @@ void DragDropWidget::dropEvent(QDropEvent *event) {
             buttonHEX->setEnabled(true);
             buttonCHAR->setEnabled(true);
             buttonSAVE->setEnabled(true);
+            buttonCLEAR->setEnabled(true);
         } else {
             qInfo() << "Fehler beim Öffnen der Datei";
         }
@@ -124,3 +133,34 @@ void DragDropWidget::onbuttonSAVEClicked() {
         file.close();
     }
 }
+//Funktion zum zurücksetzen der geöffneten Datei
+void DragDropWidget::onbuttonCLEARClicked() {
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Bestätigung", "Sind Sie sicher, dass Sie die importierte Datei löschen wollen? Alle Änderungen gehen verloren.",
+                                  QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes) {
+        clearImportedFile();
+    }
+    }
+
+void DragDropWidget::clearImportedFile() {
+    textEdit->clear(); // Löscht den Textinhalt im Textfeld
+    infoLabel->setText("Datei hier ablegen"); // Setzt den Infotext zurück
+    originalFileExtension.clear();
+    // Deaktiviert die Buttons wieder, da keine Datei mehr vorhanden ist
+    buttonBIN->setEnabled(false);
+    buttonHEX->setEnabled(false);
+    buttonCHAR->setEnabled(false);
+    buttonSAVE->setEnabled(false);
+    buttonCLEAR->setEnabled(false);
+    buttonBIN->setVisible(true);
+    buttonHEX->setVisible(true);
+    buttonCHAR->setVisible(true);
+    // Stellt das Textfeld auf unsichtbar und das InfoLabel auf sichtbar zurück
+    textEdit->setVisible(false);
+    infoLabel->setVisible(true);
+    currentMode = Mode::Normal; // Setzt den Modus auf Normal zurück
+}
+
+
